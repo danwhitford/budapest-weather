@@ -56,7 +56,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Clear previous content
     console.log('Clearing content section...');
-    contentSection.innerHTML = '';
+    while (contentSection.firstChild) {
+      contentSection.removeChild(contentSection.lastChild);
+    }
 
     let msg = `The temperature in your location right now is ${soton_now}°C.`;
     const p1 = document.createElement('p');
