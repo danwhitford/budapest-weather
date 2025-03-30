@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to display temperature information
   function showTemperature(soton_now, budapest_avg, diff) {
     const contentSection = document.querySelector('#content');
+    // Clear previous content
+    contentSection.innerHTML = '';
     let msg = `The temperature in your location right now is ${soton_now}°C.`;
     const p1 = document.createElement('p');
     p1.textContent = msg;
