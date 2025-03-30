@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const budapest_avg = 17;
   const CACHE_KEY = 'weatherData';
-  const CACHE_LIFETIME = 60 * 60 * 1000; // 1 hour in milliseconds
+  const CACHE_LIFETIME = 20 * 60 * 1000;
 
   // Function to fetch weather data
   function fetchWeather(latitude, longitude) {
