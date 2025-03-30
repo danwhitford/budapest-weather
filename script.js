@@ -2,6 +2,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const budapest_avg = 17;
+  const CACHE_KEY = 'weatherData';
+  const CACHE_LIFETIME = 60 * 60 * 1000; // 1 hour in milliseconds
 
   // Function to fetch weather data
   function fetchWeather(latitude, longitude) {
@@ -26,6 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(data);
         const soton_now = data.current_weather.temperature;
         console.log('Current Temperature', soton_now);
+
+        // Cache the data with a timestamp
+        const cacheData = {
+          temperature: soton_now,
+          timestamp: Date.now()
+        };
+        localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+
         const diff = soton_now - budapest_avg;
         console.log('Difference', diff);
         showTemperature(soton_now, budapest_avg, diff);
@@ -59,26 +69,49 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(msg);
   }
 
-  // Get user's current location
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        console.log(`User's location: Latitude ${latitude}, Longitude ${longitude}`);
-        fetchWeather(latitude, longitude);
-      },
-      error => {
-        console.error('Error getting location:', error);
-        alert('Unable to retrieve your location. Using default location (Southampton).');
-        // Fallback to default location (Southampton)
-        fetchWeather(50.904, -1.4043);
+  // Function to check the cache
+  function getCachedWeather() {
+    const cachedData = localStorage.getItem(CACHE_KEY);
+    if (cachedData) {
+      const { temperature, timestamp } = JSON.parse(cachedData);
+      const now = Date.now();
+
+      // Check if the cached data is still valid
+      if (now - timestamp < CACHE_LIFETIME) {
+        console.log('Using cached data');
+        const diff = temperature - budapest_avg;
+        showTemperature(temperature, budapest_avg, diff);
+        return true;
+      } else {
+        console.log('Cached data expired');
+        localStorage.removeItem(CACHE_KEY);
       }
-    );
-  } else {
-    alert('Geolocation is not supported by your browser. Using default location (Southampton).');
-    // Fallback to default location (Southampton)
-    fetchWeather(50.904, -1.4043);
+    }
+    return false;
+  }
+
+  // Get user's current location
+  if (!getCachedWeather()) {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          console.log(`User's location: Latitude ${latitude}, Longitude ${longitude}`);
+          fetchWeather(latitude, longitude);
+        },
+        error => {
+          console.error('Error getting location:', error);
+          alert('Unable to retrieve your location. Using default location (Southampton).');
+          // Fallback to default location (Southampton)
+          fetchWeather(50.904, -1.4043);
+        }
+      );
+    } else {
+      alert('Geolocation is not supported by your browser. Using default location (Southampton).');
+      // Fallback to default location (Southampton)
+      fetchWeather(50.904, -1.4043);
+    }
   }
 });
 
