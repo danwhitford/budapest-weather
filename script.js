@@ -42,12 +42,12 @@ fetch(requestUrl)
     contentSection.appendChild(p1);
 
     if (diff < 0) {
-      msg = `It is ${-diff}°C colder than the average May temperature in Budapest (${budapest_avg}°C). 🥶`;
+      msg = `This is ${-diff}°C colder than the average May temperature in Budapest (${budapest_avg}°C). 🥶`;
     }
     else if (diff > 0) {
-      msg = `It is ${diff}°C warmer than the average May temperature in Budapest (${budapest_avg}°C). 🥵`;
+      msg = `This is ${diff}°C warmer than the average May temperature in Budapest (${budapest_avg}°C). 🥵`;
     } else {
-      msg = `It is the same temperature as the average May temperature in Budapest (${budapest_avg}°C). 😐`;
+      msg = `This is the same temperature as the average May temperature in Budapest (${budapest_avg}°C). 😐`;
     }
     const p2 = document.createElement('p');
     p2.textContent = msg;
