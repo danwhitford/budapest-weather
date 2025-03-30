@@ -48,8 +48,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // Function to display temperature information
   function showTemperature(soton_now, budapest_avg, diff) {
     const contentSection = document.querySelector('#content');
+    
+    if (!contentSection) {
+      console.error('Content section not found!');
+      return;
+    }
+
     // Clear previous content
+    console.log('Clearing content section...');
     contentSection.innerHTML = '';
+
     let msg = `The temperature in your location right now is ${soton_now}°C.`;
     const p1 = document.createElement('p');
     p1.textContent = msg;
@@ -66,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     p2.textContent = msg;
     contentSection.appendChild(p2);
 
-    console.log(msg);
+    console.log('Content updated successfully:', contentSection.innerHTML);
   }
 
   // Function to check the cache
